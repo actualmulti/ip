@@ -19,7 +19,8 @@ public class Jake {
 
         // Chat logic
         // Task list
-        String[] taskList = new String[100];
+        Task[] taskList = new Task[100];
+
         int index = 0;
 
         while (true) {
@@ -32,21 +33,43 @@ public class Jake {
                 break;
             } else if (input.equals("list")) {
                 System.out.println("____________________________________________________________");
+                System.out.println("List of tasks:");
                 for (int i = 0; i < index; i++) {
-                    System.out.printf("%d. %s\n", i, taskList[i]);
+                    String marked;
+                    if (taskList[i].isDone()) {
+                        marked = "X";
+                    } else {
+                        marked = " ";
+                    }
+                    System.out.printf("%d. [%s] %s\n", i, marked, taskList[i].getName());
                 }
                 System.out.println("____________________________________________________________");
-                continue;
-
+            } else if (input.startsWith("mark") && Integer.parseInt(input.split(" ")[1]) < index) {
+                int taskNumber = Integer.parseInt(input.split(" ")[1]);
+                Task task = taskList[taskNumber];
+                task.markDone();
+                System.out.println("____________________________________________________________");
+                System.out.println("The following task has been marked as done:");
+                System.out.printf("[X] %s\n", task.getName());
+                System.out.println("____________________________________________________________");
+            } else if(input.startsWith("unmark") && Integer.parseInt(input.split(" ")[1]) < index) {
+                int taskNumber = Integer.parseInt(input.split(" ")[1]);
+                Task task = taskList[taskNumber];
+                task.unmarkDone();
+                System.out.println("____________________________________________________________");
+                System.out.println("The following task has been unmarked:");
+                System.out.printf("[ ] %s\n", task.getName());
+                System.out.println("______________________________________________________________");
+            } else {
+                System.out.println("____________________________________________________________");
+                System.out.printf("added: %s\n", input);
+                taskList[index] = new Task(input);
+                index++;
+                System.out.println("____________________________________________________________");
             }
-
-            System.out.println("____________________________________________________________");
-            System.out.printf("added: %s\n", input);
-            taskList[index] = input;
-            index++;
-            System.out.println("____________________________________________________________");
         }
 
 
     }
 }
+
