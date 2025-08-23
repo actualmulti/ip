@@ -18,6 +18,10 @@ public class Jake {
         System.out.println("____________________________________________________________");
 
         // Chat logic
+        // Task list
+        String[] taskList = new String[100];
+        int index = 0;
+
         while (true) {
             String input = scanner.nextLine();
 
@@ -26,10 +30,20 @@ public class Jake {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
                 break;
+            } else if (input.equals("list")) {
+                System.out.println("____________________________________________________________");
+                for (int i = 0; i < index; i++) {
+                    System.out.printf("%d. %s\n", i, taskList[i]);
+                }
+                System.out.println("____________________________________________________________");
+                continue;
+
             }
 
             System.out.println("____________________________________________________________");
-            System.out.println(input);
+            System.out.printf("added: %s\n", input);
+            taskList[index] = input;
+            index++;
             System.out.println("____________________________________________________________");
         }
 
