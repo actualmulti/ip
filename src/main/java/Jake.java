@@ -14,6 +14,7 @@ public class Jake {
                         + "| |_| / ___ \\| . \\| |___ \n"
                         + " \\___/_/   \\_\\_|\\_\\_____|\n";
 
+//        System.out.println("Hello my name is Jake.");
         System.out.println("Hello from\n" + logo);
         System.out.println("What can I do for you today?");
         System.out.println("____________________________________________________________");
@@ -56,53 +57,77 @@ public class Jake {
                 System.out.println(task.toString());
                 System.out.println("______________________________________________________________");
             } else if(input.startsWith("todo")) {
-                String name = input.substring(input.indexOf(" ") + 1);
-                taskList[index] = new Todo(name);
-                System.out.println("______________________________________________________________");
-                System.out.println("Todo task has been added:");
-                System.out.println(taskList[index].toString());
-                System.out.printf("Now you have %d tasks in the list.\n", index + 1);
-                System.out.println("______________________________________________________________");
-                index++;
+                try {
+                    String name = input.substring(input.indexOf(" ") + 1);
+                    if (name.isEmpty() || name.equals("todo")) {
+                        throw new JakeException("Todo task must have a name!");
+                    }
+                    taskList[index] = new Todo(name);
+                    System.out.println("______________________________________________________________");
+                    System.out.println("Todo task has been added:");
+                    System.out.println(taskList[index].toString());
+                    System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                    System.out.println("______________________________________________________________");
+                    index++;
+                } catch (JakeException e) {
+                    System.out.println("______________________________________________________________");
+                    System.out.println(e.getMessage());
+                    System.out.println("______________________________________________________________");
+                }
             } else if(input.startsWith("deadline")) {
-                int beginIndex = input.indexOf(" ") + 1;
-                int endIndex = input.indexOf("/");
-                String name = input.substring(input.indexOf(" ") + 1, endIndex - 1);
-                String deadline = input.substring(endIndex + 1);
-                taskList[index] = new DeadlineTask(name, deadline);
-                System.out.println("______________________________________________________________");
-                System.out.println("Deadline task has been added:");
-                System.out.println(taskList[index].toString());
-                System.out.printf("Now you have %d tasks in the list.\n", index + 1);
-                System.out.println("______________________________________________________________");
-                index++;
+                try {
+                    int beginIndex = input.indexOf(" ") + 1;
+                    int endIndex = input.indexOf("/");
+                    if (beginIndex > endIndex) {
+                        throw new JakeException("Deadline task must have a valid name and/or date!");
+                    }
+                    String name = input.substring(beginIndex, endIndex - 1);
+                    String deadline = input.substring(endIndex + 1);
+                    taskList[index] = new DeadlineTask(name, deadline);
+                    System.out.println("______________________________________________________________");
+                    System.out.println("Deadline task has been added:");
+                    System.out.println(taskList[index].toString());
+                    System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                    System.out.println("______________________________________________________________");
+                    index++;
+                } catch (JakeException e) {
+                    System.out.println("______________________________________________________________");
+                    System.out.println(e.getMessage());
+                    System.out.println("______________________________________________________________");
+                }
             } else if(input.startsWith("event")) {
-                int beginIndex = input.indexOf(" ") + 1;
-                int endIndex = input.indexOf("/");
-                String name = input.substring(input.indexOf(" ") + 1, endIndex - 1);
-                String dates =  input.substring(endIndex + 1);
-                int dateIndex = dates.indexOf("/");
-                String startDate = dates.substring(0, dateIndex - 1);
-                String endDate = dates.substring(dateIndex + 1);
-                taskList[index] = new EventTask(name, startDate, endDate);
+                try {
+                    int beginIndex = input.indexOf(" ") + 1;
+                    int endIndex = input.indexOf("/");
+                    if (beginIndex >= endIndex) {
+                        throw new JakeException("Event task must have a valid name and/or date!");
+                    }
+                    String name = input.substring(beginIndex, endIndex - 1);
+                    String dates = input.substring(endIndex + 1);
+                    int dateIndex = dates.indexOf("/");
+                    if (dateIndex < 0) {
+                        throw new JakeException("Event task must have a valid name and/or date!");
+                    }
+                    String startDate = dates.substring(0, dateIndex - 1);
+                    String endDate = dates.substring(dateIndex + 1);
+                    taskList[index] = new EventTask(name, startDate, endDate);
+                    System.out.println("______________________________________________________________");
+                    System.out.println("Event task has been added:");
+                    System.out.println(taskList[index].toString());
+                    System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                    System.out.println("______________________________________________________________");
+                    index++;
+                } catch (JakeException e) {
+                    System.out.println("______________________________________________________________");
+                    System.out.println(e.getMessage());
+                    System.out.println("______________________________________________________________");
+                }
+            } else {
                 System.out.println("______________________________________________________________");
-                System.out.println("Event task has been added:");
-                System.out.println(taskList[index].toString());
-                System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                System.out.println("Invalid task!!! Try another one");
                 System.out.println("______________________________________________________________");
-                index++;
-            }
-
-            else {
-                System.out.println("____________________________________________________________");
-                System.out.printf("added: %s\n", input);
-                taskList[index] = new Task(input);
-                index++;
-                System.out.println("____________________________________________________________");
             }
         }
-
-
     }
 }
 
