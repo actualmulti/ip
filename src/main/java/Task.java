@@ -22,4 +22,15 @@ public class Task {
     public String getName() {
         return this.name;
     }
+
+    @Override
+    public String toString() {
+        String marker;
+        if (this.isDone()) {
+            marker = "X";
+        } else {
+            marker = " ";
+        }
+        return String.format("[%s] %s", marker, this.name);
+    }
 }

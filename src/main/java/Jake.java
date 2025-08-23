@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Jake {
@@ -35,32 +36,64 @@ public class Jake {
                 System.out.println("____________________________________________________________");
                 System.out.println("List of tasks:");
                 for (int i = 0; i < index; i++) {
-                    String marked;
-                    if (taskList[i].isDone()) {
-                        marked = "X";
-                    } else {
-                        marked = " ";
-                    }
-                    System.out.printf("%d. [%s] %s\n", i, marked, taskList[i].getName());
+                    System.out.printf("%d. %s\n", i + 1, taskList[i].toString());
                 }
                 System.out.println("____________________________________________________________");
-            } else if (input.startsWith("mark") && Integer.parseInt(input.split(" ")[1]) < index) {
-                int taskNumber = Integer.parseInt(input.split(" ")[1]);
+            } else if (input.startsWith("mark") && Integer.parseInt(input.split(" ")[1]) <= index) {
+                int taskNumber = Integer.parseInt(input.split(" ")[1]) - 1;
                 Task task = taskList[taskNumber];
                 task.markDone();
                 System.out.println("____________________________________________________________");
                 System.out.println("The following task has been marked as done:");
-                System.out.printf("[X] %s\n", task.getName());
+                System.out.println(task.toString());
                 System.out.println("____________________________________________________________");
-            } else if(input.startsWith("unmark") && Integer.parseInt(input.split(" ")[1]) < index) {
-                int taskNumber = Integer.parseInt(input.split(" ")[1]);
+            } else if(input.startsWith("unmark") && Integer.parseInt(input.split(" ")[1]) <= index) {
+                int taskNumber = Integer.parseInt(input.split(" ")[1]) - 1;
                 Task task = taskList[taskNumber];
                 task.unmarkDone();
                 System.out.println("____________________________________________________________");
                 System.out.println("The following task has been unmarked:");
-                System.out.printf("[ ] %s\n", task.getName());
+                System.out.println(task.toString());
                 System.out.println("______________________________________________________________");
-            } else {
+            } else if(input.startsWith("todo")) {
+                String name = input.substring(input.indexOf(" ") + 1);
+                taskList[index] = new Todo(name);
+                System.out.println("______________________________________________________________");
+                System.out.println("Todo task has been added:");
+                System.out.println(taskList[index].toString());
+                System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                System.out.println("______________________________________________________________");
+                index++;
+            } else if(input.startsWith("deadline")) {
+                int beginIndex = input.indexOf(" ") + 1;
+                int endIndex = input.indexOf("/");
+                String name = input.substring(input.indexOf(" ") + 1, endIndex - 1);
+                String deadline = input.substring(endIndex + 1);
+                taskList[index] = new DeadlineTask(name, deadline);
+                System.out.println("______________________________________________________________");
+                System.out.println("Deadline task has been added:");
+                System.out.println(taskList[index].toString());
+                System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                System.out.println("______________________________________________________________");
+                index++;
+            } else if(input.startsWith("event")) {
+                int beginIndex = input.indexOf(" ") + 1;
+                int endIndex = input.indexOf("/");
+                String name = input.substring(input.indexOf(" ") + 1, endIndex - 1);
+                String dates =  input.substring(endIndex + 1);
+                int dateIndex = dates.indexOf("/");
+                String startDate = dates.substring(0, dateIndex - 1);
+                String endDate = dates.substring(dateIndex + 1);
+                taskList[index] = new EventTask(name, startDate, endDate);
+                System.out.println("______________________________________________________________");
+                System.out.println("Event task has been added:");
+                System.out.println(taskList[index].toString());
+                System.out.printf("Now you have %d tasks in the list.\n", index + 1);
+                System.out.println("______________________________________________________________");
+                index++;
+            }
+
+            else {
                 System.out.println("____________________________________________________________");
                 System.out.printf("added: %s\n", input);
                 taskList[index] = new Task(input);
