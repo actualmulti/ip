@@ -1,0 +1,11 @@
+todo golf swing
+deadline 2103 assignment /22 aug
+event church /24 aug 1015am /24 aug 1130am
+event qf interview /25 aug 7pm /25 aug 730pm
+mark 2
+list
+mark 3
+mark 1
+unmark 2
+list
+bye
