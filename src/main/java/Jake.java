@@ -1,5 +1,6 @@
 import java.sql.SQLOutput;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Jake {
     public static void main(String[] args) {
@@ -20,8 +21,7 @@ public class Jake {
         System.out.println("____________________________________________________________");
 
         // Chat logic
-        // Task list
-        Task[] taskList = new Task[100];
+        ArrayList<Task> taskList = new ArrayList<>();
 
         int index = 0;
 
@@ -37,12 +37,12 @@ public class Jake {
                 System.out.println("____________________________________________________________");
                 System.out.println("List of tasks:");
                 for (int i = 0; i < index; i++) {
-                    System.out.printf("%d. %s\n", i + 1, taskList[i].toString());
+                    System.out.printf("%d. %s\n", i + 1, taskList.get(i).toString());
                 }
                 System.out.println("____________________________________________________________");
             } else if (input.startsWith("mark") && Integer.parseInt(input.split(" ")[1]) <= index) {
                 int taskNumber = Integer.parseInt(input.split(" ")[1]) - 1;
-                Task task = taskList[taskNumber];
+                Task task = taskList.get(taskNumber);
                 task.markDone();
                 System.out.println("____________________________________________________________");
                 System.out.println("The following task has been marked as done:");
@@ -50,7 +50,7 @@ public class Jake {
                 System.out.println("____________________________________________________________");
             } else if(input.startsWith("unmark") && Integer.parseInt(input.split(" ")[1]) <= index) {
                 int taskNumber = Integer.parseInt(input.split(" ")[1]) - 1;
-                Task task = taskList[taskNumber];
+                Task task = taskList.get(taskNumber);
                 task.unmarkDone();
                 System.out.println("____________________________________________________________");
                 System.out.println("The following task has been unmarked:");
@@ -62,10 +62,11 @@ public class Jake {
                     if (name.isEmpty() || name.equals("todo")) {
                         throw new JakeException("Todo task must have a name!");
                     }
-                    taskList[index] = new Todo(name);
+                    taskList.add(new Todo(name));
+//                    taskList.set(index, new Todo(name));
                     System.out.println("______________________________________________________________");
                     System.out.println("Todo task has been added:");
-                    System.out.println(taskList[index].toString());
+                    System.out.println(taskList.get(index).toString());
                     System.out.printf("Now you have %d tasks in the list.\n", index + 1);
                     System.out.println("______________________________________________________________");
                     index++;
@@ -83,10 +84,11 @@ public class Jake {
                     }
                     String name = input.substring(beginIndex, endIndex - 1);
                     String deadline = input.substring(endIndex + 1);
-                    taskList[index] = new DeadlineTask(name, deadline);
+                    taskList.add(new DeadlineTask(name, deadline));
+//                    taskList.set(index, new DeadlineTask(name, deadline));
                     System.out.println("______________________________________________________________");
                     System.out.println("Deadline task has been added:");
-                    System.out.println(taskList[index].toString());
+                    System.out.println(taskList.get(index).toString());
                     System.out.printf("Now you have %d tasks in the list.\n", index + 1);
                     System.out.println("______________________________________________________________");
                     index++;
@@ -110,13 +112,32 @@ public class Jake {
                     }
                     String startDate = dates.substring(0, dateIndex - 1);
                     String endDate = dates.substring(dateIndex + 1);
-                    taskList[index] = new EventTask(name, startDate, endDate);
+                    taskList.add(new EventTask(name, startDate, endDate));
+//                    taskList.set(index, new EventTask(name, startDate, endDate));
                     System.out.println("______________________________________________________________");
                     System.out.println("Event task has been added:");
-                    System.out.println(taskList[index].toString());
+                    System.out.println(taskList.get(index).toString());
                     System.out.printf("Now you have %d tasks in the list.\n", index + 1);
                     System.out.println("______________________________________________________________");
                     index++;
+                } catch (JakeException e) {
+                    System.out.println("______________________________________________________________");
+                    System.out.println(e.getMessage());
+                    System.out.println("______________________________________________________________");
+                }
+            } else if (input.startsWith("delete")) {
+                try {
+                    int positionIndex = Integer.parseInt(input.split(" ")[1]);
+                    if (positionIndex <= 0 || positionIndex > index) {
+                        throw new JakeException("Invalid entry!");
+                    }
+                    System.out.println("______________________________________________________________");
+                    System.out.println("The following task has been removed:");
+                    System.out.println(taskList.get(positionIndex - 1).toString());
+                    System.out.printf("Now you have %d tasks in the list.\n", index - 1);
+                    System.out.println("______________________________________________________________");
+                    taskList.remove(positionIndex - 1);
+                    index--;
                 } catch (JakeException e) {
                     System.out.println("______________________________________________________________");
                     System.out.println(e.getMessage());
