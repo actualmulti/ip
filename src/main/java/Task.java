@@ -1,6 +1,6 @@
-public class Task {
-    private final String name;
-    private boolean done;
+public abstract class Task {
+    protected final String name;
+    protected boolean done;
 
     public Task(String name) {
         this.name = name;
@@ -22,6 +22,8 @@ public class Task {
     public String getName() {
         return this.name;
     }
+
+    public abstract String toFileString();
 
     @Override
     public String toString() {
