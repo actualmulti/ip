@@ -98,7 +98,7 @@ public class Ui {
 
     private String getTaskTypeString(Task task) {
         if (task instanceof Todo) {
-            return "jake.task.Todo";
+            return "Todo";
         } else if (task instanceof DeadlineTask) {
             return "Deadline";
         } else if (task instanceof EventTask) {
