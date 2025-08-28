@@ -1,9 +1,12 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class DeadlineTask extends Task {
     private String deadlineDate;
 
     public DeadlineTask(String name, String deadlineDate) {
         super(name);
-        this.deadlineDate = deadlineDate;
+        this.deadlineDate = parseDate(deadlineDate);
     }
 
     public String getType() {
@@ -11,6 +14,15 @@ public class DeadlineTask extends Task {
     }
     public String getDeadlineDate() {
         return this.deadlineDate;
+    }
+
+    private String parseDate(String date) {
+        try {
+            LocalDateTime datetime = LocalDateTime.parse(date);
+            return datetime.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss"));
+        } catch (Exception e) {
+            throw new JakeException("Invalid datetime input! Input in yyyy-mm-ddTHH:mm:ss format");
+        }
     }
 
     @Override

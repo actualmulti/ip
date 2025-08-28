@@ -1,5 +1,8 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class Storage {
     private final String filePath;
@@ -68,9 +71,12 @@ public class Storage {
     private Task parseTask(String line) {
         try {
             String[] parts = line.split(" \\| ");
-            String type = parts[0];
+            String type = parts[0].trim();
             boolean isDone = parts[1].equals("1");
-            String name = parts[2];
+            String name = parts[2].trim();
+
+            SimpleDateFormat inputFormatter = new SimpleDateFormat("MMM dd yyyy HH:mm:ss");
+            SimpleDateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
             switch (type) {
                 case "T":
@@ -78,16 +84,19 @@ public class Storage {
                     if (isDone) todo.markDone();
                     return todo;
                 case "D":
-                    String deadline = parts[3];
-                    DeadlineTask d = new DeadlineTask(name, deadline);
-                    if (isDone) d.markDone();
-                    return d;
+                    Date byDate = inputFormatter.parse(parts[3].trim());
+                    String by = outputFormatter.format(byDate);
+                    DeadlineTask deadline = new DeadlineTask(name, by);
+                    if (isDone) deadline.markDone();
+                    return deadline;
                 case "E":
-                    String startDate = parts[3];
-                    String endDate = parts[4];
-                    EventTask e = new EventTask(name, startDate, endDate);
-                    if (isDone) e.markDone();
-                    return e;
+                    Date startDate = inputFormatter.parse(parts[3].trim());
+                    Date endDate = inputFormatter.parse(parts[4].trim());
+                    String start = outputFormatter.format(startDate);
+                    String end = outputFormatter.format(endDate);
+                    EventTask event = new EventTask(name, start, end);
+                    if (isDone) event.markDone();
+                    return event;
                 default:
                     System.out.println("Corrupted line ignored: " + line);
                     return null;

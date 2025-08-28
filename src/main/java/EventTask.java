@@ -1,11 +1,14 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class EventTask extends Task {
     private String startDate;
     private String endDate;
 
     public EventTask(String name, String startDate, String endDate) {
         super(name);
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = parseDate(startDate);
+        this.endDate = parseDate(endDate);
     }
 
     public String getStartDate() {
@@ -14,6 +17,15 @@ public class EventTask extends Task {
 
     public String getEndDate() {
         return endDate;
+    }
+
+    private String parseDate(String date) {
+        try {
+            LocalDateTime datetime = LocalDateTime.parse(date);
+            return datetime.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss"));
+        } catch (Exception e) {
+            throw new JakeException("Invalid datetime input! Input in yyyy-mm-ddTHH:mm:ss format");
+        }
     }
 
     @Override
