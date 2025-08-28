@@ -1,4 +1,3 @@
-import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -6,6 +5,11 @@ public class Jake {
     public static void main(String[] args) {
         // Initialize the scanner
         Scanner scanner = new Scanner(System.in);
+
+        // Storage system
+        Storage storage = new Storage("./data/jake.txt");
+        ArrayList<Task> taskList = storage.load();
+        int index = taskList.size();
 
         // JAKE logo
         String logo =
@@ -19,11 +23,6 @@ public class Jake {
         System.out.println("Hello from\n" + logo);
         System.out.println("What can I do for you today?");
         System.out.println("____________________________________________________________");
-
-        // Chat logic
-        ArrayList<Task> taskList = new ArrayList<>();
-
-        int index = 0;
 
         while (true) {
             String input = scanner.nextLine();
@@ -44,6 +43,7 @@ public class Jake {
                 int taskNumber = Integer.parseInt(input.split(" ")[1]) - 1;
                 Task task = taskList.get(taskNumber);
                 task.markDone();
+                storage.save(taskList);
                 System.out.println("____________________________________________________________");
                 System.out.println("The following task has been marked as done:");
                 System.out.println(task.toString());
@@ -52,6 +52,7 @@ public class Jake {
                 int taskNumber = Integer.parseInt(input.split(" ")[1]) - 1;
                 Task task = taskList.get(taskNumber);
                 task.unmarkDone();
+                storage.save(taskList);
                 System.out.println("____________________________________________________________");
                 System.out.println("The following task has been unmarked:");
                 System.out.println(task.toString());
@@ -63,6 +64,7 @@ public class Jake {
                         throw new JakeException("Todo task must have a name!");
                     }
                     taskList.add(new Todo(name));
+                    storage.save(taskList);
 //                    taskList.set(index, new Todo(name));
                     System.out.println("______________________________________________________________");
                     System.out.println("Todo task has been added:");
@@ -85,6 +87,7 @@ public class Jake {
                     String name = input.substring(beginIndex, endIndex - 1);
                     String deadline = input.substring(endIndex + 1);
                     taskList.add(new DeadlineTask(name, deadline));
+                    storage.save(taskList);
 //                    taskList.set(index, new DeadlineTask(name, deadline));
                     System.out.println("______________________________________________________________");
                     System.out.println("Deadline task has been added:");
@@ -113,6 +116,7 @@ public class Jake {
                     String startDate = dates.substring(0, dateIndex - 1);
                     String endDate = dates.substring(dateIndex + 1);
                     taskList.add(new EventTask(name, startDate, endDate));
+                    storage.save(taskList);
 //                    taskList.set(index, new EventTask(name, startDate, endDate));
                     System.out.println("______________________________________________________________");
                     System.out.println("Event task has been added:");
@@ -138,6 +142,7 @@ public class Jake {
                     System.out.println("______________________________________________________________");
                     taskList.remove(positionIndex - 1);
                     index--;
+                    storage.save(taskList);
                 } catch (JakeException e) {
                     System.out.println("______________________________________________________________");
                     System.out.println(e.getMessage());

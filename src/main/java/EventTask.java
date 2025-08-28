@@ -17,6 +17,10 @@ public class EventTask extends Task {
     }
 
     @Override
+    public String toFileString() {
+        return "E | " + (done ? "1" : "0") + " | " + name + " | " + startDate + " | " + endDate;
+    }
+    @Override
     public String toString() {
         return String.format("[E]%s (from: %s to: %s)", super.toString(), startDate, endDate);
     }
