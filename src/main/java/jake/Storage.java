@@ -1,3 +1,10 @@
+package jake;
+
+import jake.task.DeadlineTask;
+import jake.task.EventTask;
+import jake.task.Task;
+import jake.task.Todo;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;

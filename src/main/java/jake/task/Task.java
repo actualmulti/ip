@@ -1,3 +1,5 @@
+package jake.task;
+
 public abstract class Task {
     protected final String name;
     protected boolean done;

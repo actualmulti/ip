@@ -3,3 +3,6 @@ E | 0 | kill myself again | Jan 25 2020 06:10:11 | Jun 23 2021 18:03:30
 D | 1 | coolers | Feb 21 1999 09:22:01
 E | 0 | idk | May 31 2021 19:02:11 | Jun 12 2022 00:00:23
 D | 1 | lol | Aug 11 2025 05:22:33
+T | 1 | kkill
+T | 0 | hello
+D | 1 | fuck | Oct 10 2020 09:00:12

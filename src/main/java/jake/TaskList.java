@@ -1,3 +1,7 @@
+package jake;
+
+import jake.task.Task;
+
 import java.util.ArrayList;
 
 public class TaskList {

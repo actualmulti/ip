@@ -1,3 +1,11 @@
+package jake.ui;
+
+import jake.*;
+import jake.task.DeadlineTask;
+import jake.task.EventTask;
+import jake.task.Task;
+import jake.task.Todo;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -90,12 +98,12 @@ public class Ui {
 
     private String getTaskTypeString(Task task) {
         if (task instanceof Todo) {
-            return "Todo";
+            return "jake.task.Todo";
         } else if (task instanceof DeadlineTask) {
             return "Deadline";
         } else if (task instanceof EventTask) {
             return "Event";
         }
-        return "Task";
+        return "jake.task.Task";
     }
 }

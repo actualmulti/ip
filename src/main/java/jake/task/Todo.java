@@ -1,4 +1,6 @@
-public class Todo extends Task{
+package jake.task;
+
+public class Todo extends Task {
     public Todo(String name) {
         super(name);
     }
