@@ -8,4 +8,4 @@ T | 0 | hello
 D | 1 | fuck | Oct 10 2020 09:00:12
 T | 1 | lemon
 D | 0 | lol | Jan 01 2020 00:00:00
-T | 0 | lol
+T | 1 | tuition

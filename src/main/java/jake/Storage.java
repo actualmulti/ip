@@ -11,13 +11,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
+/**
+ * Handles loading and saving tasks to and from a file.
+ * Manages persistent storage of task data with automatic file creation and error handling.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Creates a Storage instance with the specified file path.
+     *
+     * @param filePath the path to the file where tasks will be stored
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Ensures that the storage file and its parent directories exist.
+     * Creates the necessary directories and file if they don't exist.
+     */
     private void ensureFileExists() {
         File file = new File(filePath);
         try {
@@ -45,6 +58,12 @@ public class Storage {
     }
 
 
+    /**
+     * Loads tasks from the storage file.
+     * Parses each line in the file to recreate Task objects.
+     *
+     * @return an ArrayList of tasks loaded from the file
+     */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -64,6 +83,12 @@ public class Storage {
             return tasks;
     }
 
+    /**
+     * Saves the given list of tasks to the storage file.
+     * Overwrites the existing file content with the current task list.
+     *
+     * @param tasks the list of tasks to be saved to the file
+     */
     public void save(ArrayList<Task> tasks) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : tasks) {
@@ -75,6 +100,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a line from the storage file to create a Task object.
+     * Handles different task types (Todo, Deadline, Event) and their specific formats.
+     *
+     * @param line a line from the storage file representing a task
+     * @return the parsed Task object, or null if the line is corrupted
+     */
     private Task parseTask(String line) {
         try {
             String[] parts = line.split(" \\| ");
