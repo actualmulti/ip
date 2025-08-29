@@ -32,34 +32,34 @@ public class Jake {
                 String command = Parser.getCommandWord(fullCommand);
 
                 switch (command) {
-                    case "bye":
-                        isExit = true;
-                        ui.showGoodbye();
-                        break;
-                    case "list":
-                        ui.showTaskList(tasks);
-                        break;
-                    case "mark":
-                        handleMarkCommand(fullCommand);
-                        break;
-                    case "unmark":
-                        handleUnmarkCommand(fullCommand);
-                        break;
-                    case "todo":
-                        handleTodoCommand(fullCommand);
-                        break;
-                    case "deadline":
-                        handleDeadlineCommand(fullCommand);
-                        break;
-                    case "event":
-                        handleEventCommand(fullCommand);
-                        break;
-                    case "delete":
-                        handleDeleteCommand(fullCommand);
-                        break;
-                    default:
-                        ui.showInvalidCommand();
-                        break;
+                case "bye":
+                    isExit = true;
+                    ui.showGoodbye();
+                    break;
+                case "list":
+                    ui.showTaskList(tasks);
+                    break;
+                case "mark":
+                    handleMarkCommand(fullCommand);
+                    break;
+                case "unmark":
+                    handleUnmarkCommand(fullCommand);
+                    break;
+                case "todo":
+                    handleTodoCommand(fullCommand);
+                    break;
+                case "deadline":
+                    handleDeadlineCommand(fullCommand);
+                    break;
+                case "event":
+                    handleEventCommand(fullCommand);
+                    break;
+                case "delete":
+                    handleDeleteCommand(fullCommand);
+                    break;
+                default:
+                    ui.showInvalidCommand();
+                    break;
                 }
             } catch (JakeException e) {
                 ui.showError(e.getMessage());
