@@ -1,11 +1,9 @@
 T | 0 | kill myself
-E | 0 | kill myself again | Jan 25 2020 06:10:11 | Jun 23 2021 18:03:30
-D | 1 | coolers | Feb 21 1999 09:22:01
 E | 0 | idk | May 31 2021 19:02:11 | Jun 12 2022 00:00:23
-D | 1 | lol | Aug 11 2025 05:22:33
-T | 1 | kkill
 T | 0 | hello
 D | 1 | fuck | Oct 10 2020 09:00:12
-T | 1 | lemon
 D | 0 | lol | Jan 01 2020 00:00:00
 T | 1 | tuition
+T | 0 | kill yourself
+T | 1 | kill
+D | 1 | fuck sake | Aug 08 2025 10:00:02
