@@ -75,6 +75,9 @@ public class Jake {
                 case "delete":
                     handleDeleteCommand(fullCommand);
                     break;
+                case "find":
+                    handleFindCommand(fullCommand);
+                    break;
                 default:
                     ui.showInvalidCommand();
                     break;
@@ -115,6 +118,12 @@ public class Jake {
         tasks.unmarkTask(taskNumber - 1);
         storage.save(tasks.getTasks());
         ui.showTaskUnmarked(tasks.get(taskNumber - 1));
+    }
+
+    private void handleFindCommand(String fullCommand) throws JakeException {
+        String name = Parser.parseTaskName(fullCommand, "find");
+        TaskList out = tasks.findTasks(name);
+        ui.showTaskList(out);
     }
 
     /**
