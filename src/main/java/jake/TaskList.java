@@ -49,6 +49,16 @@ public class TaskList {
         return tasks;
     }
 
+    public TaskList findTasks(String name) throws JakeException {
+        ArrayList<Task> out = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getName().contains(name)) {
+                out.add(task);
+            }
+        }
+        return new TaskList(out);
+    }
+
     public boolean isEmpty() {
         return tasks.isEmpty();
     }
