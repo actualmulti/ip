@@ -1,9 +1,9 @@
 package jake;
 
-import jake.task.Task;
 
 import java.util.ArrayList;
 
+import jake.task.Task;
 /**
  * Manages a list of tasks with operations to add, delete, mark, and access tasks.
  * Provides a wrapper around ArrayList with additional validation and task-specific operations.
@@ -100,7 +100,12 @@ public class TaskList {
         return tasks;
     }
 
-    public TaskList findTasks(String name) throws JakeException {
+    /**
+     * Returns the list of all tasks that contain the string input.
+     * @param name the string to be found in the list of tasks.
+     * @return the TaskList containing all tasks that contain the input string.
+     */
+    public TaskList findTasks(String name) {
         ArrayList<Task> out = new ArrayList<>();
         for (Task task : tasks) {
             if (task.getName().contains(name)) {

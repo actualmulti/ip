@@ -52,8 +52,8 @@ public class Parser {
     public static String parseTaskName(String fullCommand, String commandWord) throws JakeException {
         String name = fullCommand.substring(commandWord.length()).trim();
         if (name.isEmpty()) {
-            throw new JakeException(commandWord.substring(0, 1).toUpperCase() +
-                                    commandWord.substring(1) + " task must have a name");
+            throw new JakeException(commandWord.substring(0, 1).toUpperCase()
+                    + commandWord.substring(1) + " task must have a name");
         }
         return name;
     }

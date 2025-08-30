@@ -1,12 +1,14 @@
 package jake.ui;
 
-import jake.*;
+import java.util.Scanner;
+
+import jake.TaskList;
 import jake.task.DeadlineTask;
 import jake.task.EventTask;
 import jake.task.Task;
 import jake.task.Todo;
 
-import java.util.Scanner;
+
 
 /**
  * Handles all user interface interactions for the Jake application.

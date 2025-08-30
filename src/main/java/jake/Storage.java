@@ -1,19 +1,21 @@
 package jake;
 
-import jake.task.DeadlineTask;
-import jake.task.EventTask;
-import jake.task.Task;
-import jake.task.Todo;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import jake.task.DeadlineTask;
+import jake.task.EventTask;
+import jake.task.Task;
+import jake.task.Todo;
+
+
 
 
 /**
@@ -83,9 +85,9 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-                System.out.println("Error while reading file: " + e.getMessage());
-            }
-            return tasks;
+            System.out.println("Error while reading file: " + e.getMessage());
+        }
+        return tasks;
     }
 
     /**
@@ -123,27 +125,33 @@ public class Storage {
             SimpleDateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
             switch (type) {
-                case "T":
-                    Todo todo = new Todo(name);
-                    if (isDone) todo.markDone();
-                    return todo;
-                case "D":
-                    Date byDate = inputFormatter.parse(parts[3].trim());
-                    String by = outputFormatter.format(byDate);
-                    DeadlineTask deadline = new DeadlineTask(name, by);
-                    if (isDone) deadline.markDone();
-                    return deadline;
-                case "E":
-                    Date startDate = inputFormatter.parse(parts[3].trim());
-                    Date endDate = inputFormatter.parse(parts[4].trim());
-                    String start = outputFormatter.format(startDate);
-                    String end = outputFormatter.format(endDate);
-                    EventTask event = new EventTask(name, start, end);
-                    if (isDone) event.markDone();
-                    return event;
-                default:
-                    System.out.println("Corrupted line ignored: " + line);
-                    return null;
+            case "T":
+                Todo todo = new Todo(name);
+                if (isDone) {
+                    todo.markDone();
+                }
+                return todo;
+            case "D":
+                Date byDate = inputFormatter.parse(parts[3].trim());
+                String by = outputFormatter.format(byDate);
+                DeadlineTask deadline = new DeadlineTask(name, by);
+                if (isDone) {
+                    deadline.markDone();
+                }
+                return deadline;
+            case "E":
+                Date startDate = inputFormatter.parse(parts[3].trim());
+                Date endDate = inputFormatter.parse(parts[4].trim());
+                String start = outputFormatter.format(startDate);
+                String end = outputFormatter.format(endDate);
+                EventTask event = new EventTask(name, start, end);
+                if (isDone) {
+                    event.markDone();
+                }
+                return event;
+            default:
+                System.out.println("Corrupted line ignored: " + line);
+                return null;
             }
         } catch (Exception e) {
             System.out.println("Corrupted line ignored: " + line);

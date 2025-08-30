@@ -1,17 +1,23 @@
 package jake.ui;
 
-import jake.task.*;
-import jake.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import jake.TaskList;
+import jake.task.DeadlineTask;
+import jake.task.EventTask;
+import jake.task.Todo;
+
+
 
 public class UiTest {
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

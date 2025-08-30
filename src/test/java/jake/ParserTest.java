@@ -1,9 +1,9 @@
 package jake;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
 
 public class ParserTest {
     @Test
@@ -20,8 +20,8 @@ public class ParserTest {
 
     @Test
     public void parseTaskName_onlySpaces_throwsException() {
-        JakeException exception = assertThrows(JakeException.class,
-                () -> Parser.parseTaskName("todo   ", "todo"));
+        JakeException exception = assertThrows(JakeException.class, (
+                ) -> Parser.parseTaskName("todo   ", "todo"));
         assertEquals("Todo task must have a name", exception.getMessage());
     }
 
@@ -43,14 +43,14 @@ public class ParserTest {
 
     @Test
     public void parseDeadlineCommand_noSlash_throwsException() {
-        assertThrows(JakeException.class,
-                () -> Parser.parseDeadlineCommand("deadline homework tomorrow"));
+        assertThrows(JakeException.class, (
+        ) -> Parser.parseDeadlineCommand("deadline homework tomorrow"));
     }
 
     @Test
     public void parseDeadlineCommand_noName_throwsException() {
-        assertThrows(JakeException.class,
-                () -> Parser.parseDeadlineCommand("deadline /2023-12-25T23:59:59"));
+        assertThrows(JakeException.class, (
+        ) -> Parser.parseDeadlineCommand("deadline /2023-12-25T23:59:59"));
     }
 
     @Test
@@ -64,7 +64,8 @@ public class ParserTest {
 
     @Test
     public void parseEventCommand_complexName_returnsCorrectParts() throws JakeException {
-        String[] result = Parser.parseEventCommand("event team project meeting /2023-12-25T10:00:00 /2023-12-25T11:00:00");
+        String[] result = Parser.parseEventCommand(
+                "event team project meeting /2023-12-25T10:00:00 /2023-12-25T11:00:00");
         assertEquals(3, result.length);
         assertEquals("team project meeting", result[0]);
         assertEquals("2023-12-25T10:00:00", result[1]);
@@ -73,19 +74,19 @@ public class ParserTest {
 
     @Test
     public void parseEventCommand_missingSecondSlash_throwsException() {
-        assertThrows(JakeException.class,
-                () -> Parser.parseEventCommand("event meeting /2023-12-25T10:00:00"));
+        assertThrows(JakeException.class, (
+                ) -> Parser.parseEventCommand("event meeting /2023-12-25T10:00:00"));
     }
 
     @Test
     public void parseEventCommand_noName_throwsException() {
-        assertThrows(JakeException.class,
-                () -> Parser.parseEventCommand("event /2023-12-25T10:00:00 /2023-12-25T11:00:00"));
+        assertThrows(JakeException.class, (
+                ) -> Parser.parseEventCommand("event /2023-12-25T10:00:00 /2023-12-25T11:00:00"));
     }
 
     @Test
     public void parseEventCommand_noSlash_throwsException() {
-        assertThrows(JakeException.class,
-                () -> Parser.parseEventCommand("event meeting tomorrow"));
+        assertThrows(JakeException.class, (
+                ) -> Parser.parseEventCommand("event meeting tomorrow"));
     }
 }

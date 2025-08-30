@@ -1,9 +1,9 @@
 package jake.task;
 
-import jake.JakeException;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import jake.JakeException;
 
 public class DeadlineTask extends Task {
     private String deadlineDate;
@@ -31,7 +31,7 @@ public class DeadlineTask extends Task {
 
     @Override
     public String toFileString() {
-        return "D | " + (done ? "1" : "0") +  " | " + name + " | " + deadlineDate;
+        return "D | " + (done ? "1" : "0") + " | " + name + " | " + deadlineDate;
     }
     @Override
     public String toString() {
