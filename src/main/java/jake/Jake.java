@@ -1,4 +1,7 @@
 package jake;
+import java.util.Arrays;
+import java.util.List;
+
 import jake.task.DeadlineTask;
 import jake.task.EventTask;
 import jake.task.Task;
@@ -42,6 +45,13 @@ public class Jake {
     }
 
     /**
+     * Default constructor for Jake using the default file path.
+     */
+    public Jake() {
+        this("./data/jake.txt");
+    }
+
+    /**
      * Processes a user command and returns the appropriate response string.
      * Uses GuiUi for clean, consistent formatting.
      *
@@ -71,6 +81,12 @@ public class Jake {
                 return handleDeleteCommand(input);
             case "find":
                 return handleFindCommand(input);
+            case "tag":
+                return handleTagCommand(input);
+            case "untag":
+                return handleUntagCommand(input);
+            case "search":
+                return handleSearchCommand(input);
             default:
                 return guiUi.getInvalidCommandMessage();
             }
@@ -86,14 +102,7 @@ public class Jake {
      * @throws JakeException if the task number is invalid or out of range
      */
     private String handleMarkCommand(String fullCommand) throws JakeException {
-        assert fullCommand != null : "fullCommand should not be null";
-        assert tasks != null : "tasks should be initialized";
-        assert storage != null : "storage should be initialized";
-
         int taskNumber = Parser.parseTaskNumber(fullCommand);
-        if (taskNumber > tasks.size()) {
-            throw new JakeException("Invalid task number!");
-        }
         tasks.markTask(taskNumber - 1);
         storage.save(tasks.getTasks());
         return guiUi.getTaskMarkedMessage(tasks.get(taskNumber - 1));
@@ -107,9 +116,6 @@ public class Jake {
      */
     private String handleUnmarkCommand(String fullCommand) throws JakeException {
         int taskNumber = Parser.parseTaskNumber(fullCommand);
-        if (taskNumber > tasks.size()) {
-            throw new JakeException("Invalid task number!");
-        }
         tasks.unmarkTask(taskNumber - 1);
         storage.save(tasks.getTasks());
         return guiUi.getTaskUnmarkedMessage(tasks.get(taskNumber - 1));
@@ -123,6 +129,7 @@ public class Jake {
 
     /**
      * Handles the "todo" command to add a new todo task.
+     * Supports inline tagging: "todo buy groceries #personal #urgent"
      *
      * @param fullCommand the full command string containing the todo task description
      * @throws JakeException if the task name is empty or invalid
@@ -132,8 +139,18 @@ public class Jake {
         assert tasks != null : "tasks should be initialized";
         assert storage != null : "storage should be initialized";
 
-        String name = Parser.parseTaskName(fullCommand, "todo");
+        String[] parsed = Parser.parseTaskNameWithTags(fullCommand, "todo");
+        String name = parsed[0];
+        String tagsString = parsed[1];
+
         Todo todo = new Todo(name);
+
+        // Add tags if any were found
+        if (!tagsString.isEmpty()) {
+            List<String> tags = Arrays.asList(tagsString.split(","));
+            todo.setTags(tags);
+        }
+
         tasks.add(todo);
         storage.save(tasks.getTasks());
         return guiUi.getTaskAddedMessage(todo, tasks.size());
@@ -141,27 +158,52 @@ public class Jake {
 
     /**
      * Handles the "deadline" command to add a new deadline task.
+     * Supports inline tagging: "deadline submit assignment #work #important /2023-12-25T23:59:59"
      *
      * @param fullCommand the full command string containing the task name and deadline
      * @throws JakeException if the command format is invalid or the date is malformed
      */
     private String handleDeadlineCommand(String fullCommand) throws JakeException {
-        String[] parsed = Parser.parseDeadlineCommand(fullCommand);
-        DeadlineTask deadline = new DeadlineTask(parsed[0], parsed[1]);
-        tasks.add(deadline);
+        String[] parsed = Parser.parseDeadlineCommandWithTags(fullCommand);
+        String name = parsed[0];
+        String deadline = parsed[1];
+        String tagsString = parsed[2];
+
+        DeadlineTask deadlineTask = new DeadlineTask(name, deadline);
+
+        // Add tags if any were found
+        if (!tagsString.isEmpty()) {
+            List<String> tags = Arrays.asList(tagsString.split(","));
+            deadlineTask.setTags(tags);
+        }
+
+        tasks.add(deadlineTask);
         storage.save(tasks.getTasks());
-        return guiUi.getTaskAddedMessage(deadline, tasks.size());
+        return guiUi.getTaskAddedMessage(deadlineTask, tasks.size());
     }
 
     /**
      * Handles the "event" command to add a new event task.
+     * Supports inline tagging: "event team meeting #work #weekly /2023-12-20T10:00:00 /2023-12-20T11:00:00"
      *
      * @param fullCommand the full command string containing the task name, start time, and end time
      * @throws JakeException if the command format is invalid or the dates are malformed
      */
     private String handleEventCommand(String fullCommand) throws JakeException {
-        String[] parsed = Parser.parseEventCommand(fullCommand);
-        EventTask event = new EventTask(parsed[0], parsed[1], parsed[2]);
+        String[] parsed = Parser.parseEventCommandWithTags(fullCommand);
+        String name = parsed[0];
+        String startDate = parsed[1];
+        String endDate = parsed[2];
+        String tagsString = parsed[3];
+
+        EventTask event = new EventTask(name, startDate, endDate);
+
+        // Add tags if any were found
+        if (!tagsString.isEmpty()) {
+            List<String> tags = Arrays.asList(tagsString.split(","));
+            event.setTags(tags);
+        }
+
         tasks.add(event);
         storage.save(tasks.getTasks());
         return guiUi.getTaskAddedMessage(event, tasks.size());
@@ -174,18 +216,103 @@ public class Jake {
      * @throws JakeException if the task number is invalid or out of range
      */
     private String handleDeleteCommand(String fullCommand) throws JakeException {
-        assert fullCommand != null : "fullCommand should not be null";
-        assert tasks != null : "tasks should be initialized";
-        assert storage != null : "storage should be initialized";
-
         int taskNumber = Parser.parseTaskNumber(fullCommand);
-        if (taskNumber <= 0 || taskNumber > tasks.size()) {
-            throw new JakeException("Invalid task number!");
-        }
         Task deletedTask = tasks.get(taskNumber - 1);
         tasks.delete(taskNumber - 1);
         storage.save(tasks.getTasks());
         return guiUi.getTaskDeletedMessage(deletedTask, tasks.size());
+    }
+
+    /**
+     * Handles the "tag" command to add or remove tags from tasks.
+     *
+     * @param fullCommand the full command string containing task number, operation, and tag
+     * @throws JakeException if the command format is invalid or task number is out of range
+     */
+    private String handleTagCommand(String fullCommand) throws JakeException {
+        String[] parsed = Parser.parseTagCommand(fullCommand);
+        int taskNumber = Integer.parseInt(parsed[0]);
+        String operation = parsed[1];
+        String tag = parsed[2];
+
+        Task task = tasks.get(taskNumber - 1);
+
+        if (operation.equals("add")) {
+            task.addTag(tag);
+            storage.save(tasks.getTasks());
+            return guiUi.getTagAddedMessage(task, tag);
+        } else { // operation.equals("remove")
+            if (task.hasTag(tag)) {
+                task.removeTag(tag);
+                storage.save(tasks.getTasks());
+                return guiUi.getTagRemovedMessage(task, tag);
+            } else {
+                return guiUi.getTagNotFoundMessage(task, tag);
+            }
+        }
+    }
+
+    /**
+     * Handles the "untag" command to remove one or more tags from a task.
+     * Usage: "untag [task number] [tag1] [tag2] ..." or "untag [task number] all"
+     *
+     * @param fullCommand the full command string containing task number and tags to remove
+     * @throws JakeException if the command format is invalid or task number is out of range
+     */
+    private String handleUntagCommand(String fullCommand) throws JakeException {
+        String[] parsed = Parser.parseUntagCommand(fullCommand);
+        int taskNumber = Integer.parseInt(parsed[0]);
+        Task task = tasks.get(taskNumber - 1);
+
+        if (parsed.length == 2 && parsed[1].equals("all")) {
+            // Remove all tags
+            List<String> removedTags = task.getTags();
+            task.setTags(Arrays.asList()); // Clear all tags
+            storage.save(tasks.getTasks());
+            return guiUi.getAllTagsRemovedMessage(task, removedTags);
+        } else {
+            // Remove specific tags
+            StringBuilder result = new StringBuilder();
+            boolean anyRemoved = false;
+
+            for (int i = 1; i < parsed.length; i++) {
+                String tag = parsed[i];
+                if (task.hasTag(tag)) {
+                    task.removeTag(tag);
+                    result.append("Removed tag '").append(tag).append("'\n");
+                    anyRemoved = true;
+                } else {
+                    result.append("Tag '").append(tag).append("' not found\n");
+                }
+            }
+
+            if (anyRemoved) {
+                storage.save(tasks.getTasks());
+            }
+
+            result.append("Updated task: ").append(task.toString());
+            return result.toString().trim();
+        }
+    }
+
+    /**
+     * Handles the "search" command to find tasks by tag.
+     *
+     * @param fullCommand the full command string containing the search term
+     * @throws JakeException if the command format is invalid
+     */
+    private String handleSearchCommand(String fullCommand) throws JakeException {
+        String searchTerm = Parser.parseSearchTagCommand(fullCommand);
+
+        // If search term starts with #, treat it as a tag search
+        if (fullCommand.contains("#")) {
+            TaskList filteredTasks = tasks.findTasksByTag(searchTerm);
+            return guiUi.getSearchResultsMessage(filteredTasks, "#" + searchTerm);
+        } else {
+            // Regular text search in task names
+            TaskList filteredTasks = tasks.findTasks(searchTerm);
+            return guiUi.getSearchResultsMessage(filteredTasks, searchTerm);
+        }
     }
 
     /**
@@ -230,6 +357,15 @@ public class Jake {
                     break;
                 case "find":
                     handleFindCommand(fullCommand);
+                    break;
+                case "tag":
+                    handleTagCommand(fullCommand);
+                    break;
+                case "untag":
+                    handleUntagCommand(fullCommand);
+                    break;
+                case "search":
+                    handleSearchCommand(fullCommand);
                     break;
                 default:
                     ui.showInvalidCommand();

@@ -45,10 +45,16 @@ public class DeadlineTask extends Task {
 
     @Override
     public String toFileString() {
-        return "D | " + (isDone ? "1" : "0") + " | " + name + " | " + deadlineDate;
+        String tagsString = String.join(",", this.tags);
+        return "D | " + (isDone ? "1" : "0") + " | " + name + " | " + deadlineDate + " | " + tagsString;
     }
     @Override
     public String toString() {
-        return String.format("[D]%s (by: %s)", super.toString(), deadlineDate);
+        String tagsDisplay = getTagsDisplay();
+        if (tagsDisplay.isEmpty()) {
+            return String.format("[D]%s (by: %s)", super.toString(), deadlineDate);
+        } else {
+            return String.format("[D]%s (by: %s) | %s", super.toString(), deadlineDate, tagsDisplay);
+        }
     }
 }

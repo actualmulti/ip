@@ -138,6 +138,21 @@ public class TaskList {
         return new TaskList(out);
     }
 
+    /**
+     * Returns the list of all tasks that have the specified tag.
+     * @param tag the tag to search for
+     * @return the TaskList containing all tasks that have the specified tag
+     */
+    public TaskList findTasksByTag(String tag) {
+        ArrayList<Task> out = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.hasTag(tag)) {
+                out.add(task);
+            }
+        }
+        return new TaskList(out);
+    }
+
     public boolean isEmpty() {
         return tasks.isEmpty();
     }

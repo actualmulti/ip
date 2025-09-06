@@ -49,10 +49,16 @@ public class EventTask extends Task {
 
     @Override
     public String toFileString() {
-        return "E | " + (isDone ? "1" : "0") + " | " + name + " | " + startDate + " | " + endDate;
+        String tagsString = String.join(", ", tags);
+        return "E | " + (isDone ? "1" : "0") + " | " + name + " | " + startDate + " | " + endDate + " | " + tagsString;
     }
     @Override
     public String toString() {
-        return String.format("[E]%s (from: %s to: %s)", super.toString(), startDate, endDate);
+        String tagsDisplay = getTagsDisplay();
+        if (tagsDisplay.isEmpty()) {
+            return String.format("[E]%s (from: %s to: %s)", super.toString(), startDate, endDate);
+        } else {
+            return String.format("[E]%s (from: %s to: %s) | %s", super.toString(), startDate, endDate, tagsDisplay);
+        }
     }
 }

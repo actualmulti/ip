@@ -13,11 +13,17 @@ public class Todo extends Task {
 
     @Override
     public String toFileString() {
-        return "T | " + (isDone ? "1" : "0") + " | " + name;
+        String tagsString = String.join(",", tags);
+        return "T | " + (isDone ? "1" : "0") + " | " + name + " | " + tagsString;
     }
 
     @Override
     public String toString() {
-        return String.format("[T]%s", super.toString());
+        String tagsDisplay = getTagsDisplay();
+        if (tagsDisplay.isEmpty()) {
+            return String.format("[T]%s", super.toString());
+        } else {
+            return String.format("[T]%s | %s", super.toString(), tagsDisplay);
+        }
     }
 }

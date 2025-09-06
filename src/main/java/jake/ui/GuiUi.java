@@ -1,5 +1,7 @@
 package jake.ui;
 
+import java.util.List;
+
 import jake.TaskList;
 import jake.task.DeadlineTask;
 import jake.task.EventTask;
@@ -13,54 +15,58 @@ import jake.task.Todo;
 public class GuiUi {
 
     /**
-     * Returns the welcome message as a formatted string.
-     * @return the welcome message
+     * Returns the welcome message for the application.
+     * @return formatted welcome message
      */
     public String getWelcomeMessage() {
-        String logo =
-                "     _   _    _  _______ \n"
-                        + "    | | / \\  | |/ / ____|\n"
-                        + " _  | |/ _ \\ | ' /|  _|  \n"
-                        + "| |_| / ___ \\| . \\| |___ \n"
-                        + " \\___/_/   \\_\\_|\\_\\_____|\n";
-        return "Hello from\n" + logo + "\nWhat can I do for you today?";
+        return "Hello! I'm Jake\nWhat can I do for you today?";
     }
 
     /**
-     * Returns the goodbye message as a formatted string.
-     * @return the goodbye message
+     * Returns the goodbye message.
+     * @return formatted goodbye message
      */
     public String getGoodbyeMessage() {
         return "Bye. Hope to see you again soon!";
     }
 
     /**
-     * Returns a formatted string when a task is successfully added.
+     * Returns a formatted error message.
+     * @param message the error message to display
+     * @return formatted error message
+     */
+    public String getErrorMessage(String message) {
+        return "Error: " + message;
+    }
+
+    /**
+     * Returns the invalid command message.
+     * @return formatted invalid command message
+     */
+    public String getInvalidCommandMessage() {
+        return "Invalid task!!! Try another one";
+    }
+
+    /**
+     * Returns a formatted message for when a task is added.
      * @param task the task that was added
-     * @param totalTasks the total number of tasks in the list after adding
-     * @return formatted confirmation message
+     * @param totalTasks the total number of tasks after adding
+     * @return formatted task added message
      */
     public String getTaskAddedMessage(Task task, int totalTasks) {
-        return String.format("Got it. I've added this task:\n  %s\nNow you have %d tasks in the list.",
-                task.toString(), totalTasks);
+        return String.format("%s task has been added:\n%s\nNow you have %d tasks in the list.",
+                getTaskTypeString(task), task.toString(), totalTasks);
     }
 
     /**
-     * Returns a formatted string when a task is marked as done.
-     * @param task the task that was marked as done
-     * @return formatted confirmation message
+     * Returns a formatted message for when a task is deleted.
+     * @param task the task that was deleted
+     * @param remainingTasks the number of tasks remaining after deletion
+     * @return formatted task deleted message
      */
-    public String getTaskMarkedMessage(Task task) {
-        return "Nice! I've marked this task as done:\n  " + task.toString();
-    }
-
-    /**
-     * Returns a formatted string when a task is unmarked.
-     * @param task the task that was unmarked
-     * @return formatted confirmation message
-     */
-    public String getTaskUnmarkedMessage(Task task) {
-        return "OK, I've marked this task as not done yet:\n  " + task.toString();
+    public String getTaskDeletedMessage(Task task, int remainingTasks) {
+        return String.format("Noted. I've removed this task:\n%s\nNow you have %d tasks in the list.",
+                task.toString(), remainingTasks);
     }
 
     /**
@@ -82,39 +88,93 @@ public class GuiUi {
     }
 
     /**
-     * Returns a formatted string when a task is deleted.
-     * @param task the task that was deleted
-     * @param totalTasks the total number of tasks remaining in the list
-     * @return formatted confirmation message
+     * Returns a formatted message for when a task is marked as done.
+     * @param task the task that was marked
+     * @return formatted task marked message
      */
-    public String getTaskDeletedMessage(Task task, int totalTasks) {
-        return String.format("Noted. I've removed this task:\n  %s\nNow you have %d tasks in the list.",
-                task.toString(), totalTasks);
+    public String getTaskMarkedMessage(Task task) {
+        return String.format("Nice! I've marked this task as done:\n%s", task.toString());
     }
 
     /**
-     * Returns a formatted error message for invalid commands.
-     * @return error message
+     * Returns a formatted message for when a task is unmarked.
+     * @param task the task that was unmarked
+     * @return formatted task unmarked message
      */
-    public String getInvalidCommandMessage() {
-        return "OOPS!!! I'm sorry, but I don't know what that means :-(";
+    public String getTaskUnmarkedMessage(Task task) {
+        return String.format("OK, I've marked this task as not done yet:\n%s", task.toString());
     }
 
     /**
-     * Returns a formatted error message.
-     * @param message the error message to format
-     * @return formatted error message
+     * Returns a formatted string showing search results.
+     * @param tasks the TaskList containing search results
+     * @param searchTerm the term that was searched for
+     * @return formatted search results
      */
-    public String getErrorMessage(String message) {
-        return "OOPS!!! " + message;
+    public String getSearchResultsMessage(TaskList tasks, String searchTerm) {
+        if (tasks.size() == 0) {
+            return String.format("No tasks found matching '%s'.", searchTerm);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Here are the tasks matching '%s':\n", searchTerm));
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append(String.format("%d. %s\n", i + 1, tasks.get(i).toString()));
+        }
+        return sb.toString().trim();
     }
 
     /**
-     * Returns a formatted string for loading error.
-     * @return loading error message
+     * Returns a formatted message for when a tag is added to a task.
+     * @param task the task that received the tag
+     * @param tag the tag that was added
+     * @return formatted tag added message
      */
-    public String getLoadingErrorMessage() {
-        return "Error loading tasks from file. Starting with empty task list.";
+    public String getTagAddedMessage(Task task, String tag) {
+        return String.format("Tag '%s' added to task:\n%s", tag, task.toString());
+    }
+
+    /**
+     * Returns a formatted message for when a tag is removed from a task.
+     * @param task the task from which the tag was removed
+     * @param tag the tag that was removed
+     * @return formatted tag removed message
+     */
+    public String getTagRemovedMessage(Task task, String tag) {
+        return String.format("Tag '%s' removed from task:\n%s", tag, task.toString());
+    }
+
+    /**
+     * Returns a formatted message for when a tag is not found on a task.
+     * @param task the task that doesn't have the tag
+     * @param tag the tag that was not found
+     * @return formatted tag not found message
+     */
+    public String getTagNotFoundMessage(Task task, String tag) {
+        return String.format("Tag '%s' not found on task:\n%s", tag, task.toString());
+    }
+
+    /**
+     * Returns a formatted message for when all tags are removed from a task.
+     * @param task the task from which all tags were removed
+     * @param removedTags the list of tags that were removed
+     * @return formatted all tags removed message
+     */
+    public String getAllTagsRemovedMessage(Task task, List<String> removedTags) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("All tags removed from task:\n");
+        if (!removedTags.isEmpty()) {
+            sb.append("Removed tags: ");
+            for (int i = 0; i < removedTags.size(); i++) {
+                sb.append(removedTags.get(i));
+                if (i < removedTags.size() - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("\n");
+        }
+        sb.append("Updated task: ").append(task.toString());
+        return sb.toString();
     }
 
     /**

@@ -8,7 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import jake.task.DeadlineTask;
 import jake.task.EventTask;
@@ -39,28 +41,17 @@ public class Storage {
      * Creates the necessary directories and file if they don't exist.
      */
     private void ensureFileExists() {
-        File file = new File(filePath);
         try {
+            File file = new File(filePath);
             File parentDir = file.getParentFile();
             if (parentDir != null && !parentDir.exists()) {
-                boolean dirCreated = parentDir.mkdirs();
-                if (dirCreated) {
-                    System.out.println("Created directory: " + parentDir.getPath());
-                } else {
-                    System.out.println("Failed to create directory (might already exist): " + parentDir.getPath());
-                }
+                parentDir.mkdirs();
             }
-
             if (!file.exists()) {
-                boolean fileCreated = file.createNewFile();
-                if (fileCreated) {
-                    System.out.println("Created new save file: " + file.getPath());
-                } else {
-                    System.out.println("Failed to create file: " + file.getPath());
-                }
+                file.createNewFile();
             }
         } catch (IOException e) {
-            System.out.println("Error ensuring storage file exists: " + e.getMessage());
+            System.out.println("Error creating data file: " + e.getMessage());
         }
     }
 
@@ -94,16 +85,18 @@ public class Storage {
      * Saves the given list of tasks to the storage file.
      * Overwrites the existing file content with the current task list.
      *
-     * @param tasks the list of tasks to be saved to the file
+     * @param tasks the list of tasks to save to the file
      */
     public void save(ArrayList<Task> tasks) {
+        ensureFileExists();
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : tasks) {
                 writer.write(task.toFileString());
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error while writing file: " + e.getMessage());
+            System.out.println("Error while writing to file: " + e.getMessage());
         }
     }
 
@@ -124,31 +117,48 @@ public class Storage {
             SimpleDateFormat inputFormatter = new SimpleDateFormat("MMM dd yyyy HH:mm:ss");
             SimpleDateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
+            Task task = null;
+
             switch (type) {
             case "T":
-                Todo todo = new Todo(name);
+                task = new Todo(name);
                 if (isDone) {
-                    todo.markDone();
+                    task.markDone();
                 }
-                return todo;
+                // Handle tags for Todo (at index 3)
+                if (parts.length > 3 && !parts[3].trim().isEmpty()) {
+                    List<String> tags = Arrays.asList(parts[3].split(","));
+                    task.setTags(tags);
+                }
+                return task;
             case "D":
                 Date byDate = inputFormatter.parse(parts[3].trim());
                 String by = outputFormatter.format(byDate);
-                DeadlineTask deadline = new DeadlineTask(name, by);
+                task = new DeadlineTask(name, by);
                 if (isDone) {
-                    deadline.markDone();
+                    task.markDone();
                 }
-                return deadline;
+                // Handle tags for DeadlineTask (at index 4)
+                if (parts.length > 4 && !parts[4].trim().isEmpty()) {
+                    List<String> tags = Arrays.asList(parts[4].split(","));
+                    task.setTags(tags);
+                }
+                return task;
             case "E":
                 Date startDate = inputFormatter.parse(parts[3].trim());
                 Date endDate = inputFormatter.parse(parts[4].trim());
                 String start = outputFormatter.format(startDate);
                 String end = outputFormatter.format(endDate);
-                EventTask event = new EventTask(name, start, end);
+                task = new EventTask(name, start, end);
                 if (isDone) {
-                    event.markDone();
+                    task.markDone();
                 }
-                return event;
+                // Handle tags for EventTask (at index 5)
+                if (parts.length > 5 && !parts[5].trim().isEmpty()) {
+                    List<String> tags = Arrays.asList(parts[5].split(","));
+                    task.setTags(tags);
+                }
+                return task;
             default:
                 System.out.println("Corrupted line ignored: " + line);
                 return null;
