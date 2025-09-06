@@ -5,11 +5,25 @@ import java.time.format.DateTimeFormatter;
 
 import jake.JakeException;
 
-
+/**
+ * Represents a task that occurs during a specific time period with start and end times.
+ * Both start and end dates are parsed from ISO format (yyyy-MM-ddTHH:mm:ss) and
+ * displayed in a more readable format (MMM dd yyyy HH:mm:ss).
+ *
+ * Example: "team meeting (from: Dec 25 2023 10:00:00 to: Dec 25 2023 11:30:00)"
+ */
 public class EventTask extends Task {
     private String startDate;
     private String endDate;
 
+    /**
+     * Creates a new event task with the specified name, start time, and end time.
+     *
+     * @param name the description of the event
+     * @param startDate the start time in ISO format (yyyy-MM-ddTHH:mm:ss)
+     * @param endDate the end time in ISO format (yyyy-MM-ddTHH:mm:ss)
+     * @throws JakeException if either date format is invalid
+     */
     public EventTask(String name, String startDate, String endDate) {
         super(name);
         this.startDate = parseDate(startDate);
