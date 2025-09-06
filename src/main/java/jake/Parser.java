@@ -14,6 +14,9 @@ public class Parser {
      * @return the first word of the command, which represents the command type
      */
     public static String getCommandWord(String fullCommand) {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert !fullCommand.isEmpty() : "fullCommand should not be empty";
+
         return fullCommand.split(" ")[0];
     }
 
@@ -30,6 +33,8 @@ public class Parser {
      * @throws JakeException if no task number is provided or if the format is invalid
      */
     public static int parseTaskNumber(String fullCommand) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+
         try {
             String[] parts = fullCommand.split(" ");
             if (parts.length < 2) {
@@ -50,6 +55,9 @@ public class Parser {
      * @throws JakeException if the task name is empty after removing the command word
      */
     public static String parseTaskName(String fullCommand, String commandWord) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert commandWord != null : "commandWord should not be null";
+
         String name = fullCommand.substring(commandWord.length()).trim();
         if (name.isEmpty()) {
             throw new JakeException(commandWord.substring(0, 1).toUpperCase()
@@ -67,6 +75,9 @@ public class Parser {
      * @throws JakeException if the command format is invalid or missing required components
      */
     public static String[] parseDeadlineCommand(String fullCommand) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert fullCommand.trim().startsWith("deadline") : "deadline should start with 'deadline'";
+
         try {
             int beginIndex = fullCommand.indexOf(" ") + 1;
             int endIndex = fullCommand.indexOf("/", beginIndex);
@@ -90,6 +101,9 @@ public class Parser {
      * @throws JakeException if the command format is invalid or missing required components
      */
     public static String[] parseEventCommand(String fullCommand) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert fullCommand.trim().startsWith("event") : "event should start with 'event'";
+
         try {
             int beginIndex = fullCommand.indexOf(" ") + 1;
             int endIndex = fullCommand.indexOf("/");
