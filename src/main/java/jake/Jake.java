@@ -3,8 +3,8 @@ import jake.task.DeadlineTask;
 import jake.task.EventTask;
 import jake.task.Task;
 import jake.task.Todo;
-import jake.ui.Ui;
 import jake.ui.GuiUi;
+import jake.ui.Ui;
 
 /**
  * Main class for Jake chatbot app.
