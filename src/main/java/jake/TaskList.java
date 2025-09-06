@@ -31,7 +31,14 @@ public class TaskList {
      * @param task the task to be added to the list
      */
     public void add(Task task) {
+        assert task != null : "task should not be null";
+        assert tasks != null : "tasklist should be initialized";
+
+        int sizeBefore = tasks.size();
         tasks.add(task);
+
+        assert tasks.size() == sizeBefore + 1 : "list size should increase by 1 after adding";
+        assert tasks.contains(task) : "task should be present in list after adding";
     }
 
     /**
@@ -41,10 +48,20 @@ public class TaskList {
      * @throws JakeException if the index is invalid or out of bounds
      */
     public void delete(int index) throws JakeException {
-        if (index < 0 || index >= tasks.size()) {
+        assert tasks != null : "tasklist should be initialized";
+        assert index >= 0 : "index should be non-negative";
+
+        if (index >= tasks.size()) {
             throw new JakeException("Invalid task number!");
         }
+
+        int sizeBefore = tasks.size();
+        Task removedTask = tasks.get(index);
         tasks.remove(index);
+
+        assert tasks.size() == sizeBefore - 1 : "list size should increase by 1";
+        assert tasks.indexOf(removedTask) != index
+                || !tasks.contains(removedTask) : "task should be removed from speicifed index";
     }
 
     /**
@@ -68,7 +85,10 @@ public class TaskList {
      * @throws JakeException if the index is invalid or out of bounds
      */
     public void markTask(int index) throws JakeException {
+        assert index >= 0 : "index should be non-negative";
+
         get(index).markDone();
+        assert get(index).isDone() : "task should be marked as done after markDone()";
     }
 
     /**
@@ -78,7 +98,10 @@ public class TaskList {
      * @throws JakeException if the index is invalid or out of bounds
      */
     public void unmarkTask(int index) throws JakeException {
+        assert index >= 0 : "index should be non-negative";
+
         get(index).unmarkDone();
+        assert !get(index).isDone() : "task should not be marked as done after unmarkDone()";
     }
 
     /**
