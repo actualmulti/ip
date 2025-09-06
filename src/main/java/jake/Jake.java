@@ -27,6 +27,9 @@ public class Jake {
      * @param filePath the path to the file where tasks are stored.
      */
     public Jake(String filePath) {
+        assert filePath != null : "filePath should not be null";
+        assert !filePath.trim().isEmpty() : "filePath should not be empty";
+
         ui = new Ui();
         guiUi = new GuiUi();
         storage = new Storage(filePath);
@@ -83,6 +86,10 @@ public class Jake {
      * @throws JakeException if the task number is invalid or out of range
      */
     private String handleMarkCommand(String fullCommand) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert tasks != null : "tasks should be initialized";
+        assert storage != null : "storage should be initialized";
+
         int taskNumber = Parser.parseTaskNumber(fullCommand);
         if (taskNumber > tasks.size()) {
             throw new JakeException("Invalid task number!");
@@ -121,6 +128,10 @@ public class Jake {
      * @throws JakeException if the task name is empty or invalid
      */
     private String handleTodoCommand(String fullCommand) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert tasks != null : "tasks should be initialized";
+        assert storage != null : "storage should be initialized";
+
         String name = Parser.parseTaskName(fullCommand, "todo");
         Todo todo = new Todo(name);
         tasks.add(todo);
@@ -163,6 +174,10 @@ public class Jake {
      * @throws JakeException if the task number is invalid or out of range
      */
     private String handleDeleteCommand(String fullCommand) throws JakeException {
+        assert fullCommand != null : "fullCommand should not be null";
+        assert tasks != null : "tasks should be initialized";
+        assert storage != null : "storage should be initialized";
+
         int taskNumber = Parser.parseTaskNumber(fullCommand);
         if (taskNumber <= 0 || taskNumber > tasks.size()) {
             throw new JakeException("Invalid task number!");
