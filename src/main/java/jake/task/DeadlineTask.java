@@ -45,7 +45,7 @@ public class DeadlineTask extends Task {
 
     @Override
     public String toFileString() {
-        return "D | " + (done ? "1" : "0") + " | " + name + " | " + deadlineDate;
+        return "D | " + (isDone ? "1" : "0") + " | " + name + " | " + deadlineDate;
     }
     @Override
     public String toString() {

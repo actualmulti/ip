@@ -9,7 +9,7 @@ package jake.task;
  */
 public abstract class Task {
     protected final String name;
-    protected boolean done;
+    protected boolean isDone;
 
     /**
             * Creates a new task with the specified name.
@@ -19,19 +19,19 @@ public abstract class Task {
      */
     public Task(String name) {
         this.name = name;
-        this.done = false;
+        this.isDone = false;
     }
 
     public boolean isDone() {
-        return done;
+        return isDone;
     }
 
     public void markDone() {
-        this.done = true;
+        this.isDone = true;
     }
 
     public void unmarkDone() {
-        this.done = false;
+        this.isDone = false;
     }
 
     public String getName() {
