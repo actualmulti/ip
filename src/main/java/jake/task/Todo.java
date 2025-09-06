@@ -1,5 +1,11 @@
 package jake.task;
 
+/**
+ * Represents a simple todo task without any date constraints.
+ * A todo task only has a name and completion status.
+ *
+ * Example: "buy groceries", "read book"
+ */
 public class Todo extends Task {
     public Todo(String name) {
         super(name);

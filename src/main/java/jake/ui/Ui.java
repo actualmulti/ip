@@ -8,8 +8,6 @@ import jake.task.EventTask;
 import jake.task.Task;
 import jake.task.Todo;
 
-
-
 /**
  * Handles all user interface interactions for the Jake application.
  * Manages input from users and output display including welcome messages,
