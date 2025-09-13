@@ -1,7 +1,7 @@
 # Jake User Guide
 
 
-![Product Screenshot Placeholder](./docs/Ui.png)
+![Jake UI Example](./Ui.png?raw=true)
 
 Jake is a lightweight, chat-style desktop task assistant (Java + JavaFX).  
 It lets you quickly add and manage:
